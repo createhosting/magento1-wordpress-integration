@@ -126,7 +126,7 @@ class Fishpig_Wordpress_Model_Observer extends Varien_Object
 			);
 
 			$posts = Mage::getResourceModel('wordpress/post_collection')
-				->addIsViewableFilter()
+				->addStatusFilter(array('publish', 'protected'))
 				->setOrderByPostDate()
 				->load();
 
