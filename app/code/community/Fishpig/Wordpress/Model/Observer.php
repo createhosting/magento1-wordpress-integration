@@ -21,6 +21,12 @@ class Fishpig_Wordpress_Model_Observer extends Varien_Object
 	protected $_canEmulate = null;
 	
 	/**
+	 * Flag to track whether sitemap blog URLs have been injected via stream
+	 *
+	 * @var bool
+	 */
+	protected $_sitemapInjected = false;
+	/**
 	 * Save the associations
 	 *
 	 * @param Varien_Event_Observer $observer
@@ -94,7 +100,7 @@ class Fishpig_Wordpress_Model_Observer extends Varien_Object
 			->getEvent()
 				->getSitemap();
 
-		if (!$this->_observerCanRun(__METHOD__ . $sitemap->getStoreId())) {
+		if ($this->_sitemapInjected) {
 			return false;
 		}
 
@@ -153,6 +159,59 @@ class Fishpig_Wordpress_Model_Observer extends Varien_Object
 		return $this;
 	}
 
+	/**
+	 * Inject blog URLs into the XML sitemap via stream (OpenMage 20.x+)
+	 *
+	 * @param Varien_Event_Observer $observer
+	 * @return $this
+	 */
+	public function injectXmlSitemapLinksViaStreamObserver(Varien_Event_Observer $observer)
+	{
+		$event = $observer->getEvent();
+		$io = $event->getFile();
+		$storeId = $event->getStoreId();
+
+		try {
+			$emulationData = $this->_startEmulation($storeId);
+
+			if (!Mage::getStoreConfigFlag('wordpress/module/enabled', $storeId)) {
+				$this->_endEmulation($emulationData);
+				return $this;
+			}
+
+			$io->streamWrite(sprintf(
+				'<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>%s</changefreq><priority>%.1f</priority></url>',
+				htmlspecialchars(Mage::helper('wordpress')->getUrl()),
+				Mage::getSingleton('core/date')->gmtDate('Y-m-d'),
+				'daily',
+				'1.0'
+			));
+
+			$posts = Mage::getResourceModel('wordpress/post_collection')
+				->addStatusFilter(array('publish', 'protected'))
+				->setOrderByPostDate()
+				->load();
+
+			foreach($posts as $post) {
+				$io->streamWrite(sprintf(
+					'<url><loc>%s</loc><lastmod>%s</lastmod><changefreq>%s</changefreq><priority>%.1f</priority></url>',
+					htmlspecialchars($post->getPermalink()),
+					$post->getPostModifiedDate('Y-m-d'),
+					'monthly',
+					'0.5'
+				));
+			}
+
+			$this->_sitemapInjected = true;
+		}
+		catch (Exception $e) {
+			Mage::helper('wordpress')->log($e);
+		}
+
+		$this->_endEmulation($emulationData);
+
+		return $this;
+	}
 	/**
 	 * Emulate $storeId
 	 *

@@ -34,6 +34,15 @@
 					</wordpress>
                 </observers>
             </sitemap_sitemap_save_before>
+            <sitemap_urlset_generating_before>
+                <observers>
+					<wordpress>
+						<type>singleton</type>
+						<class>wordpress/observer</class>
+						<method>injectXmlSitemapLinksViaStreamObserver</method>
+					</wordpress>
+                </observers>
+            </sitemap_urlset_generating_before>
         </events>
 		<blocks>
 			<wordpress>

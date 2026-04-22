@@ -1,14 +1,22 @@
 # FishPig Magento 1 WordPress Integration (Fork)
 
-Fork of [bentideswell/magento1-wordpress-integration](https://github.com/bentideswell/magento1-wordpress-integration) with a fix for PHP 8.2 compatibility.
+Fork of [bentideswell/magento1-wordpress-integration](https://github.com/bentideswell/magento1-wordpress-integration) with PHP 8.2 compatibility fixes.
 
 ## What changed
 
-**Sitemap observer fix** (`app/code/community/Fishpig/Wordpress/Model/Observer.php`)
+### Sitemap observer fix
 
-The sitemap observer calls `addIsViewableFilter()` to fetch blog posts when generating the XML sitemap. That method calls `Mage::getSingleton('customer/session')`, which fails during admin store emulation on PHP 8.2 with Redis sessions (Cm_RedisSession). The observer catches the exception silently, so the sitemap generates without any blog URLs.
+The original sitemap observer has two issues:
 
-Replaced `addIsViewableFilter()` with `addStatusFilter(array('publish', 'protected'))` in the sitemap observer. Same result, no session dependency.
+1. **Session conflict (PHP 8.2):** The observer calls `addIsViewableFilter()` which triggers `Mage::getSingleton('customer/session')` during admin store emulation. On PHP 8.2 with Redis sessions (Cm_RedisSession), this causes a session conflict and the observer silently fails, generating the sitemap without blog URLs.
+
+2. **Save & Generate timing:** The observer hooks into `sitemap_sitemap_save_before`. When using "Save & Generate" in the admin, the save event fires before generation (modifying the old file), then `generateXml()` overwrites it. A singleton guard prevents the observer from running again after generation.
+
+**Fix:** Added a second observer on `sitemap_urlset_generating_before` (OpenMage 20.x+) that writes blog URLs directly to the file stream during generation. The original `save_before` observer is kept as a fallback for older Magento 1.x and uses a flag to skip when the stream observer has already run. Both observers use `addStatusFilter()` instead of `addIsViewableFilter()` to avoid the session dependency.
+
+**Files changed:**
+- `app/code/community/Fishpig/Wordpress/Model/Observer.php`
+- `app/code/community/Fishpig/Wordpress/etc/config.xml`
 
 ## Installation
 
