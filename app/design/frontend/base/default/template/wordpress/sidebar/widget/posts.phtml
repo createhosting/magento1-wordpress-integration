@@ -18,7 +18,7 @@
 			<ul id="<?php echo $this->getListId() ?>">
 			<?php foreach($posts as $post): ?>
 				<li class="item">
-					<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->htmlEscape($post->getPostTitle()) ?>"><?php echo $this->htmlEscape($post->getPostTitle()) ?></a>
+					<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->escapeHtml($post->getPostTitle()) ?>"><?php echo $this->escapeHtml($post->getPostTitle()) ?></a>
 				</li>
 			<?php endforeach; ?>
 			</ul>

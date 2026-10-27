@@ -13,7 +13,7 @@ class Fishpig_Wordpress_Adminhtml_Wordpress_AssociationsController extends Mage_
 	 *
 	 * @return bool
 	 */
-	protected function _isAllowed()
+	protected function _isAllowed(): bool
 	{
 		return true;
 	}

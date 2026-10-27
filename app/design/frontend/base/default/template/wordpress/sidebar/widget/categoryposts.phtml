@@ -19,13 +19,13 @@
 			<?php foreach($posts as $post): ?>
 				<?php $post->setExcerptSize($this->getExcerptLength()) ?>
 				<li class="item">
-					<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->htmlEscape($post->getPostTitle()) ?>"><?php echo $this->htmlEscape($post->getPostTitle()) ?></a>
+					<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->escapeHtml($post->getPostTitle()) ?>"><?php echo $this->escapeHtml($post->getPostTitle()) ?></a>
 					<?php if ($this->canDisplayDate()): ?>
 						<p class="post-date"><?php echo $post->getPostDate() ?></p>
 					<?php endif; ?>
 					<?php if ($this->canDisplayImage() && $post->getFeaturedImage()): ?>
 						<p class="post-image">
-							<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->htmlEscape($post->getPostTitle()) ?>"><img src="<?php echo $post->getFeaturedImage()->getAvailableImage() ?>" alt="<?php echo $this->escapeHtml($post->getPostTitle()) ?>" style="<?php if ($this->getThumbW()): ?>max-width:<?php echo $this->getThumbW() ?>px;<?php endif; ?><?php if ($this->getThumbH()): ?>max-height:<?php echo $this->getThumbH() ?>px;<?php endif; ?>"/></a>
+							<a href="<?php echo $post->getPermalink() ?>" title="<?php echo $this->escapeHtml($post->getPostTitle()) ?>"><img src="<?php echo $post->getFeaturedImage()->getAvailableImage() ?>" alt="<?php echo $this->escapeHtml($post->getPostTitle()) ?>" style="<?php if ($this->getThumbW()): ?>max-width:<?php echo $this->getThumbW() ?>px;<?php endif; ?><?php if ($this->getThumbH()): ?>max-height:<?php echo $this->getThumbH() ?>px;<?php endif; ?>"/></a>
 						</p>
 					<?php endif; ?>
 					<?php if ($this->canDisplayExcerpt()): ?>

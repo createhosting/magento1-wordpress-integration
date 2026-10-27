@@ -18,8 +18,8 @@
 			<ul id="<?php echo $this->getListId() ?>">
 			<?php foreach($items as $item): ?>
 				<li class="item">
-					<a href="<?php echo $item->getLink() ?>" title="<?php echo $this->htmlEscape($item->getTitle()) ?>">
-						<?php echo $this->htmlEscape($item->getTitle()) ?>
+					<a href="<?php echo $item->getLink() ?>" title="<?php echo $this->escapeHtml($item->getTitle()) ?>">
+						<?php echo $this->escapeHtml($item->getTitle()) ?>
 					</a>
 					<?php if ($this->getShowDate()): ?>
 						<div class="rss-date"><?php echo $this->helper('wordpress')->formatDate($item->getData('pubDate')) ?></div>
