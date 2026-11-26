@@ -143,7 +143,7 @@ class Fishpig_Wordpress_Model_Image extends Fishpig_Wordpress_Model_Post_Attachm
 	{
 		$url = $this->getFileUploadUrl() . dirname($this->getFile()) . '/';
 		
-		return Mage::app()->getStore()->isCurrentlySecure()
+		return Mage::app()->isCurrentlySecure()
 			? str_replace('http://', 'https://', $url)
 			: $url;
 	}
