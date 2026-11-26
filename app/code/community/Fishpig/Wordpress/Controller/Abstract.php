@@ -199,7 +199,7 @@ abstract class Fishpig_Wordpress_Controller_Abstract extends Mage_Core_Controlle
 
 		$objects['home'] = array(
 			'link' => Mage::getUrl(),
-			'label' => __('Home'),
+			'label' => $this->__('Home'),
 		);
 		
 		$objects['blog_home'] = array(

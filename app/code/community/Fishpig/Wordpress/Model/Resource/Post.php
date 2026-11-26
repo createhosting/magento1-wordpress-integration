@@ -45,7 +45,7 @@ class Fishpig_Wordpress_Model_Resource_Post extends Fishpig_Wordpress_Model_Reso
 	
 	public function completePostSlug($slug, $postId, $postType)
 	{
-		if (!preg_match_all('/(\%[a-z0-9_-]{1,}\%)/U', $slug, $matches)) {
+		if (!preg_match_all('/(\%[a-z0-9_-]{1,}\%)/U', (string) $slug, $matches)) {
 			return $slug;
 		}
 

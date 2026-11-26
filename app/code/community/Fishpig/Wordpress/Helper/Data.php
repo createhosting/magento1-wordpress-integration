@@ -344,7 +344,7 @@ class Fishpig_Wordpress_Helper_Data extends Fishpig_Wordpress_Helper_Abstract
 	 */
 	public function escapeHtml($data, $allowedTags = null)
 	{
-		return Mage::helper('core')->htmlEscape($data, $allowedTags);
+		return Mage::helper('core')->escapeHtml($data, $allowedTags);
 	}
 	
 	/**

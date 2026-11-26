@@ -18,11 +18,11 @@ class Fishpig_Wordpress_Helper_Abstract extends Mage_Core_Helper_Abstract
 	/**
 	 * Returns the URL used to access your Wordpress frontend
 	 *
-	 * @param string|null $extra = null
+	 * @param string $extra = ''
 	 * @param array $params = array
 	 * @return string
 	 */
-	public function getUrl($extra = null, array $params = array())
+	public function getUrl($extra = '', array $params = array())
 	{
 		if (count($params) > 0) {
 			$extra = trim($extra, '/') . '/';
